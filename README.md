@@ -81,7 +81,7 @@ Ejemplo de formato del fichero indicado en la opción 7:
   $ ERROR: El parámetro <grupoid> debe ser un valor numérico de tipo entero.
   ```
   
-- Mensaje de confirmación de realización correcta de la operaciones 1, 2 o 3. 
+- Mensaje de confirmación de realización correcta de las operaciones 1, 2 o 3. 
 
   ```
   $ un9pe -g 1 1DAM-G1
@@ -244,4 +244,4 @@ Repositorio y ejecutable.
 
 ## 4. Bibliografía
 
-Mas documentación en la tarea.
+Más documentación en la tarea.

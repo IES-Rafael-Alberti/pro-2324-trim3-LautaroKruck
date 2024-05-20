@@ -29,6 +29,7 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
     testImplementation(kotlin("test"))
+    implementation("com.h2database:h2:2.2.224")
 
 }
 
