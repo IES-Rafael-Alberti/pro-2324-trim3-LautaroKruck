@@ -1,31 +1,22 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+package com.yourpackage
+
+import androidx.compose.desktop.DesktopTheme
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+import com.yourpackage.UI.MainUI
+import com.yourpackage.UI.MainViewModel
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+fun main() {
+    val mainViewModel = remember { MainViewModel() }
 
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
+    Window(
+        title = "CTF Score Tracker",
+        size = IntSize(400, 200)
+    ) {
+        DesktopTheme {
+            MainUI(mainViewModel)
         }
     }
 }
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
-    }
-}
