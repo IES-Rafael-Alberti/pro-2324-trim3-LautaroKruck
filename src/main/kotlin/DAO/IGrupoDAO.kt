@@ -8,6 +8,7 @@ interface IGrupoDAO {
     fun deleteGrupo(grupoId: Int)
     fun getAllGrupos(): List<Grupo>
     fun getGrupoById(grupoId: Int): Grupo?
+    fun getGrupoDescById(grupoId: Int): String?
 }
 
 

@@ -1,11 +1,40 @@
 package com.yourpackage.service
 
-import com.yourpackage.dao.ICTFDAO
 import com.yourpackage.dao.IGrupoDAO
+import com.yourpackage.Entity.Grupo
+import com.yourpackage.dao.ICTFDAO
 import com.yourpackage.entity.CTF
 import com.yourpackage.output.IOutputInfo
 
-class CTFService(private val ctfDAO: ICTFDAO, private val grupoDAO: IGrupoDAO, private val output: IOutputInfo) {
+class GrupoService(private val grupoDAO: IGrupoDAO, private val output: IOutputInfo) {
+    fun addGrupo(grupoId: Int, grupoDesc: String) {
+        val grupo = Grupo(grupoId, grupoDesc)
+        grupoDAO.addGrupo(grupo)
+        output.showMessage("Procesado: Añadido el grupo \"$grupoDesc\".")
+    }
+
+    fun deleteGrupo(grupoId: Int) {
+        grupoDAO.deleteGrupo(grupoId)
+        output.showMessage("Procesado: Eliminada el grupo con id \"$grupoId\".")
+    }
+
+    fun listGrupo(grupoId: Int? = null) {
+        if (grupoId != null) {
+            val grupo = grupoDAO.getGrupoById(grupoId)
+            if (grupo != null) {
+                output.showMessage("Procesado: Listado del grupo ${grupo.grupoId}")
+                output.show(listOf(grupo))
+            } else {
+                output.showMessage("No se encontró el grupo con id $grupoId.")
+            }
+        } else {
+            val grupos = grupoDAO.getAllGrupos()
+            output.show(grupos)
+        }
+    }
+}
+
+class CTFS(private val ctfDAO: ICTFDAO, private val grupoDAO: IGrupoDAO, private val output: IOutputInfo) {
     fun addCTF(CTFid: Int, grupoId: Int, puntuacion: Int) {
         val ctf = CTF(CTFid, grupoId, puntuacion)
         ctfDAO.addCTF(ctf)
@@ -35,17 +64,4 @@ class CTFService(private val ctfDAO: ICTFDAO, private val grupoDAO: IGrupoDAO, p
             grupoDAO.updateGrupo(grupo)
         }
     }
-
-    fun listParticipaciones(ctfId: Int) {
-        val participations = ctfDAO.getParticipationsByCTFId(ctfId)
-        if (participations.isEmpty()) {
-            output.showMessage("No hay participaciones para el CTF con ID: $ctfId")
-        } else {
-            participations.forEach { participation ->
-                val grupoDesc = grupoDAO.getGrupoDescById(participation.grupoId)
-                output.showMessage("CTF ID: ${participation.ctfId}, Grupo ID: ${participation.grupoId}, Grupo Desc: $grupoDesc, Puntuación: ${participation.puntuacion}")
-            }
-        }
-    }
 }
-

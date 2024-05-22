@@ -1,4 +1,4 @@
-package com.yourpackage.UI
+package com.yourpackage.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -16,7 +16,8 @@ fun MainUI(mainViewModel: MainViewModel) {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Grupo ID:")
-        Text("Group Description:")
+        // TextField for grupoId input can be added here
+
         Button(onClick = { mainViewModel.showGrupoInfo(grupoIdState.value.toIntOrNull()) }) {
             Text("Show")
         }

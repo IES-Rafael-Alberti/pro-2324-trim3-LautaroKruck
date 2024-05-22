@@ -1,12 +1,13 @@
 package com.yourpackage.dao
 
-import com.yourpackage.Entity.Grupo
 import com.yourpackage.db_connection.DBConnection
+import com.yourpackage.Entity.Grupo
+import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 class SQLGrupoDAO : IGrupoDAO {
-    private val connection = DBConnection.getConnection()
+    private val connection: Connection = DBConnection.getConnection()
 
     override fun addGrupo(grupo: Grupo) {
         val query = "INSERT INTO GRUPOS (grupoid, grupodesc) VALUES (?, ?)"
@@ -39,7 +40,8 @@ class SQLGrupoDAO : IGrupoDAO {
         while (resultSet.next()) {
             val grupo = Grupo(
                 resultSet.getInt("grupoid"),
-                resultSet.getString("grupodesc")
+                resultSet.getString("grupodesc"),
+                resultSet.getInt("mejorposCTFid")
             )
             grupos.add(grupo)
         }
@@ -54,8 +56,21 @@ class SQLGrupoDAO : IGrupoDAO {
         return if (resultSet.next()) {
             Grupo(
                 resultSet.getInt("grupoid"),
-                resultSet.getString("grupodesc")
+                resultSet.getString("grupodesc"),
+                resultSet.getInt("mejorposCTFid")
             )
+        } else {
+            null
+        }
+    }
+
+    override fun getGrupoDescById(grupoId: Int): String? {
+        val query = "SELECT descripcion FROM Grupos WHERE id = ?"
+        val preparedStatement = connection.prepareStatement(query)
+        preparedStatement.setInt(1, grupoId)
+        val resultSet = preparedStatement.executeQuery()
+        return if (resultSet.next()) {
+            resultSet.getString("descripcion")
         } else {
             null
         }

@@ -1,12 +1,16 @@
 package com.yourpackage.dao
 
+
+import com.yourpackage.Entity.CTFParticipation
 import com.yourpackage.db_connection.DBConnection
 import com.yourpackage.entity.CTF
+import com.yourpackage.Entity.Grupo
+import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 class SQLCTFDAO : ICTFDAO {
-    private val connection = DBConnection.getConnection()
+    private val connection: Connection = DBConnection.getConnection()
 
     override fun addCTF(ctf: CTF) {
         val query = "INSERT INTO CTFS (CTFid, grupoid, puntuacion) VALUES (?, ?, ?)"
@@ -65,5 +69,18 @@ class SQLCTFDAO : ICTFDAO {
         } else {
             null
         }
+    }
+    override fun getParticipationsByCTFId(ctfId: Int): List<CTFParticipation> {
+        val participations = mutableListOf<CTFParticipation>()
+        val query = "SELECT * FROM CTFS WHERE CTFid = ?"
+        val preparedStatement = connection.prepareStatement(query)
+        preparedStatement.setInt(1, ctfId)
+        val resultSet = preparedStatement.executeQuery()
+        while (resultSet.next()) {
+            val grupoId = resultSet.getInt("grupoid")
+            val puntuacion = resultSet.getInt("puntuacion")
+            participations.add(CTFParticipation(ctfId, grupoId, puntuacion))
+        }
+        return participations
     }
 }

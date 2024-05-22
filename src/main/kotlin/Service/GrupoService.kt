@@ -1,11 +1,13 @@
 package com.yourpackage.Service
 
+import com.yourpackage.Entity.Grupo
 import com.yourpackage.dao.IGrupoDAO
 import com.yourpackage.output.IOutputInfo
 
 class GrupoService(private val grupoDAO: IGrupoDAO, private val output: IOutputInfo) {
     fun addGrupo(grupoId: Int, grupoDesc: String) {
-        grupoDAO.addGrupo(grupoId, grupoDesc)
+        val grupo = Grupo(grupoId, grupoDesc)
+        grupoDAO.addGrupo(grupo)
         output.showMessage("Procesado: Añadido el grupo \"$grupoDesc\".")
     }
 
@@ -14,7 +16,7 @@ class GrupoService(private val grupoDAO: IGrupoDAO, private val output: IOutputI
         output.showMessage("Procesado: Eliminada el grupo con id \"$grupoId\".")
     }
 
-    fun listGrupo(grupoId: Int?) {
+    fun listGrupo(grupoId: Int? = null) {
         if (grupoId != null) {
             val grupo = grupoDAO.getGrupoById(grupoId)
             if (grupo != null) {

@@ -1,8 +1,6 @@
-package com.yourpackage.Service
+package com.yourpackage.service
 
 import com.yourpackage.output.IOutputInfo
-import com.yourpackage.service.CTFService
-
 
 class MainService(
     private val grupoService: GrupoService,
@@ -46,7 +44,7 @@ class MainService(
                     val grupoId = args[1].toIntOrNull()
                     val puntuacion = args[2].toIntOrNull()
                     if (ctfId != null && grupoId != null && puntuacion != null) {
-                        ctfService.addCTFParticipation(ctfId, grupoId, puntuacion)
+                        ctfService.addCTF(ctfId, grupoId, puntuacion)
                     } else {
                         output.showMessage("ERROR: Los parámetros deben ser valores numéricos de tipo entero.")
                     }
@@ -59,7 +57,7 @@ class MainService(
                     val ctfId = args[0].toIntOrNull()
                     val grupoId = args[1].toIntOrNull()
                     if (ctfId != null && grupoId != null) {
-                        ctfService.deleteCTFParticipation(ctfId, grupoId)
+                        ctfService.deleteCTF(ctfId, grupoId)
                     } else {
                         output.showMessage("ERROR: Los parámetros deben ser valores numéricos de tipo entero.")
                     }
@@ -94,5 +92,8 @@ class MainService(
             }
         }
     }
-
+    fun exportClassification(filePath: String) {
+        // Implement the export functionality here
+        output.showMessage("Exporting classification to $filePath")
+    }
 }

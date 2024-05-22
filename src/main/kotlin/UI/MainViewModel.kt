@@ -1,15 +1,20 @@
-package com.yourpackage.UI
+package com.yourpackage.ui
 
-import com.yourpackage.Service.MainService
+import com.yourpackage.service.MainService
 
-class MainViewModel {
-    private val mainService = MainService()
+class MainViewModel(private val mainService: MainService) {
 
-    fun processCommand(command: String) {
-        mainService.processCommand(command)
+    fun showGrupoInfo(grupoId: Int?) {
+        if (grupoId != null) {
+            mainService.processCommand("-l", listOf(grupoId.toString()))
+        } else {
+            // Handle invalid groupId input
+        }
     }
 
-    fun exportClassification(filePath: String) {
+    fun exportClassification() {
+        // Define a default file path or get it from the UI
+        val filePath = "classification_export.txt"
         mainService.exportClassification(filePath)
     }
 }
