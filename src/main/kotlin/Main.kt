@@ -1,8 +1,8 @@
 package com.yourpackage
 
 import androidx.compose.ui.window.singleWindowApplication
-import com.yourpackage.dao.SQLCTFDAO
-import com.yourpackage.dao.SQLGrupoDAO
+import com.yourpackage.DAO.SQL.SQLCTFDAO
+import com.yourpackage.DAO.SQL.SQLGrupoDAO
 import com.yourpackage.db_connection.DBConnection
 import com.yourpackage.output.Console
 import com.yourpackage.service.CTFService
@@ -41,8 +41,10 @@ fun main(args: Array<String>) {
     val grupoDAO = SQLGrupoDAO()
     val ctfDAO = SQLCTFDAO()
     val output = Console()
+
     val grupoService = GrupoService(grupoDAO, output)
-    val ctfService = CTFService(ctfDAO, grupoDAO, output)
+    val ctfService = CTFService(ctfDAO,grupoDAO, output)
+
     val mainService = MainService(grupoService, ctfService, output)
     val mainViewModel = MainViewModel(mainService)
 

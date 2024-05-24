@@ -1,7 +1,3 @@
-package com.yourpackage.Entity
+package com.yourpackage.entity
 
-data class CTFParticipation(
-    val ctfId: Int,
-    val grupoId: Int,
-    val puntuacion: Int
-)
+data class CTFParticipation(val ctfId: Int, val grupoId: Int, val puntuacion: Int)

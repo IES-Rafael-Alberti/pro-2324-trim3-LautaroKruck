@@ -1,15 +1,15 @@
 package com.yourpackage.dao
 
-import com.yourpackage.Entity.CTFParticipation
+import com.yourpackage.entity.CTFParticipation
 import com.yourpackage.entity.CTF
 
 interface ICTFDAO {
-    fun addCTF(ctf: CTF)
-    fun updateCTF(ctf: CTF)
-    fun deleteCTF(ctfId: Int, grupoId: Int)
-    fun getAllCTFs(): List<CTF>
-    fun getCTFById(ctfId: Int, grupoId: Int): CTF?
-    fun getParticipationsByCTFId(ctfId: Int): List<CTFParticipation>
+    fun agregarCTF(ctf: CTF)
+    fun actualizarCTF(ctf: CTF)
+    fun eliminarCTF(ctfId: Int, grupoId: Int)
+    fun obtenerTodosCTFs(): List<CTF>
+    fun obtenerCTFPorId(ctfId: Int, grupoId: Int): CTF?
+    fun obtenerParticipacionesPorCTFId(ctfId: Int): List<CTFParticipation>
 }
 
 

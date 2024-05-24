@@ -1,14 +1,15 @@
 package com.yourpackage.dao
 
-import com.yourpackage.Entity.Grupo
+import com.yourpackage.entity.Grupo
+
 
 interface IGrupoDAO {
-    fun addGrupo(grupo: Grupo)
-    fun updateGrupo(grupo: Grupo)
-    fun deleteGrupo(grupoId: Int)
-    fun getAllGrupos(): List<Grupo>
-    fun getGrupoById(grupoId: Int): Grupo?
-    fun getGrupoDescById(grupoId: Int): String?
+    fun agregarGrupo(grupo: Grupo)
+    fun actualizarGrupo(grupo: Grupo)
+    fun eliminarGrupo(grupoId: Int)
+    fun obtenerTodosGrupos(): List<Grupo>
+    fun obtenerGrupoPorId(grupoId: Int): Grupo?
+    fun obtenerDescripcionGrupoPorId(grupoId: Int): String?
 }
 
 

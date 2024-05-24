@@ -1,0 +1,7 @@
+-g 1 GrupoA
+-g 2 GrupoB
+-t 1
+-l
+-p 1 2 100
+-e 1 2
+-c 1
