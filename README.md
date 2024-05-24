@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/9RZbmHCC)
 # Prueba específica unidad 7 y 9
 
 > Se evaluará el RA7 y RA9
@@ -20,16 +21,16 @@ Para ello han diseñado una base de datos muy simple en la que tiene dos entidad
 
 El programa tendrá que soportar las siguientes operaciones, que se pasarán a través de línea de comandos:
 
-| id | **comando**                       	  | **Descripción**                                                                    	                                                                                                                                                                                                                         |
-|----|--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1  | `-g <grupoId> <grupoDesc>` 	         | Añade un nuevo grupo con `<grupoid>` y `<grupodesc>` en la tabla `GRUPOS`.                                                                                                                                                                                                                                   |
+| id | **comando**                       	   | **Descripción**                                                                    	                                                                                                                                                                                                                         |
+|----|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1  | `-g <grupoId> <grupoDesc>` 	          | Añade un nuevo grupo con `<grupoid>` y `<grupodesc>` en la tabla `GRUPOS`.                                                                                                                                                                                                                                   |
 | 2  | `-p <ctfId> <grupoId> <puntuacion>` 	 | Añade una participación del grupo `<grupoid>` en el CTF `<ctfid>` con la puntuación `<puntuacion>`. Si la participación del grupo `<grupoid>` en el CTF `<ctfid>` ya existe, actualiza la puntualización. En cualquiera de los casos, recalcula el campo `mejorposCTFid` de los grupos en la tabla `GRUPOS`. |
-| 3  | `-t <grupoId>` 	                     | Elimina el grupo `<grupoid>` en la tabla `GRUPOS`, por tanto también elimina todas sus participaciones en los CTF.                                                                                                                                                                                           |
+| 3  | `-t <grupoId>` 	                      | Elimina el grupo `<grupoid>` en la tabla `GRUPOS`, por tanto también elimina todas sus participaciones en los CTF.                                                                                                                                                                                           |
 | 4  | `-e <ctfId> <grupoId>`              	 | Elimina la participación del grupo `<grupoid>` en el CTF `<ctfid>`. Si no existe la participación, no realiza nada. Finalmente, recalcula el campo `mejorposCTFid` de los grupos en la tabla `GRUPOS`.                                                                                                       |
-| 5  | `-l <grupoId>`              	        | Si `<grupoId>` esta presente muestra la información del grupo `<grupoId>` y sus participaciones. Si el grupo no está presente muestra la información de todos los grupos.                                                                                                                                    |
-| 6  | `-c <ctfId>`              	          | Si `<ctfId>` esta presente muestra la participación de los grupos y la puntuación obtenida, ordenado de mayor a menor puntuación.                                                                                                                                                                            |
-| 7  | `-f <filepath>`              	       | Si `<filepath>` existe, será un fichero con un conjunto de comandos para procesamiento por lotes.                                                                                                                                                                                                            |
-| 8  | `-i`              	       | Lanza la interface gráfica.                                                                                                                                                                                 |
+| 5  | `-l <grupoId>`              	         | Si `<grupoId>` esta presente muestra la información del grupo `<grupoId>` y sus participaciones. Si el grupo no está presente muestra la información de todos los grupos.                                                                                                                                    |
+| 6  | `-c <ctfId>`              	           | Si `<ctfId>` esta presente muestra la participación de los grupos y la puntuación obtenida, ordenado de mayor a menor puntuación.                                                                                                                                                                            |
+| 7  | `-f <filepath>`              	        | Si `<filepath>` existe, será un fichero con un conjunto de comandos para procesamiento por lotes.                                                                                                                                                                                                            |
+| 8  | `-i`              	                   | Lanza la interface gráfica.                                                                                                                                                                                                                                                                                  |
 
 ### 1.1. Entrada
 La ejecución de cualquiera de las operaciones 1, 2, ... descritas en la tabla. 
@@ -80,7 +81,7 @@ Ejemplo de formato del fichero indicado en la opción 7:
   $ ERROR: El parámetro <grupoid> debe ser un valor numérico de tipo entero.
   ```
   
-- Mensaje de confirmación de realización correcta de la operaciones 1, 2 o 3. 
+- Mensaje de confirmación de realización correcta de las operaciones 1, 2 o 3. 
 
   ```
   $ un9pe -g 1 1DAM-G1
@@ -243,4 +244,4 @@ Repositorio y ejecutable.
 
 ## 4. Bibliografía
 
-Mas documentación en la tarea.
+Más documentación en la tarea.

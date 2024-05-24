@@ -1,31 +1,64 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+package com.yourpackage
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+import androidx.compose.ui.window.singleWindowApplication
+import com.yourpackage.DAO.SQL.SQLCTFDAO
+import com.yourpackage.DAO.SQL.SQLGrupoDAO
+import com.yourpackage.db_connection.DBConnection
+import com.yourpackage.output.Console
+import com.yourpackage.service.CTFService
+import com.yourpackage.service.GrupoService
+import com.yourpackage.service.MainService
+import com.yourpackage.ui.MainUI
+import com.yourpackage.ui.MainViewModel
+import java.sql.Connection
 
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
-        }
-    }
+fun createTables(connection: Connection) {
+    val statement = connection.createStatement()
+    val createGrupoTable = """
+        CREATE TABLE GRUPOS (
+            grupoid INT PRIMARY KEY,
+            grupodesc VARCHAR(255) NOT NULL,
+            mejorposCTFid INT
+        );
+    """.trimIndent()
+    val createCTFTable = """
+        CREATE TABLE CTFS (
+            CTFid INT,
+            grupoid INT,
+            puntuacion INT,
+            PRIMARY KEY (CTFid, grupoid),
+            FOREIGN KEY (grupoid) REFERENCES GRUPOS(grupoid)
+        );
+    """.trimIndent()
+    statement.execute(createGrupoTable)
+    statement.execute(createCTFTable)
 }
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
+fun main(args: Array<String>) {
+    val connection = DBConnection.getConnection()
+    createTables(connection)
+
+    val grupoDAO = SQLGrupoDAO()
+    val ctfDAO = SQLCTFDAO()
+    val output = Console()
+
+    val grupoService = GrupoService(grupoDAO, output)
+    val ctfService = CTFService(ctfDAO,grupoDAO, output)
+
+    val mainService = MainService(grupoService, ctfService, output)
+    val mainViewModel = MainViewModel(mainService)
+
+    if (args.isNotEmpty()) {
+        val command = args[0]
+        if (command == "-i") {
+            singleWindowApplication {
+                MainUI(mainViewModel)
+            }
+        } else {
+            val commandArgs = args.drop(1)
+            mainService.processCommand(command, commandArgs)
+        }
+    } else {
+        output.showMessage("Por favor, proporciona un comando.")
     }
 }

@@ -29,6 +29,7 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
     testImplementation(kotlin("test"))
+    implementation("com.h2database:h2:2.2.224")
 
 }
 
@@ -52,7 +53,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "2324_PRO_u7u9_CTFM_pe"
+            packageName = "un9pe"
             packageVersion = "1.0.0"
         }
     }
