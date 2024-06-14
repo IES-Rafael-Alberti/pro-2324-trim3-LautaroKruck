@@ -1,53 +1,41 @@
 package com.yourpackage.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.singleWindowApplication
-
 
 @Composable
-fun MainUI(mainViewModel: MainViewModel){
-    singleWindowApplication {
-        MaterialTheme {
-            var grupoId by remember { mutableStateOf("") }
-            var gruposInfo by remember { mutableStateOf("Información de todos los grupos") }
-
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                OutlinedTextField(
-                    value = grupoId,
-                    onValueChange = { grupoId = it },
-                    label = { Text("Grupo ID") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+fun MainUI(viewModel: MainViewModel) {
+    MaterialTheme {
+        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                item {
+                    Text(viewModel.output)
+                }
+            }
+            OutlinedTextField(
+                value = viewModel.grupoId,
+                onValueChange = { viewModel.grupoId = it },
+                label = { Text("Grupo ID") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 Button(onClick = {
-
-                    gruposInfo = "Información del grupo $grupoId"
-
-                    grupoId = ""
+                    viewModel.mostrarInformacion()
                 }) {
                     Text("Mostrar")
                 }
-                Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
-
+                    viewModel.exportarClasificacion()
                 }) {
                     Text("Exportar")
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(gruposInfo)
             }
         }
     }

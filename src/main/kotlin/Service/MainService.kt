@@ -8,9 +8,9 @@ import java.io.File
 import java.io.IOException
 
 class MainService(
-    private val grupoService: GrupoService,
+    val grupoService: GrupoService,
     private val ctfService: CTFService,
-    private val output: IOutputInfo
+    val output: IOutputInfo
 ) {
 
     fun processCommand(command: String, args: List<String>) {

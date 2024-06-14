@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
     val output = Console()
 
     val grupoService = GrupoService(grupoDAO, output)
-    val ctfService = CTFService(ctfDAO,grupoDAO, output)
+    val ctfService = CTFService(ctfDAO, grupoDAO, output)
 
     val mainService = MainService(grupoService, ctfService, output)
     val mainViewModel = MainViewModel(mainService)

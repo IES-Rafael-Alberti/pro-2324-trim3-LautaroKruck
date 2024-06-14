@@ -201,7 +201,7 @@ d. Realizar las operaciones necesarias para que el programa funcione correctamen
     * El formato del fichero será el indicado en apartado de 1.1. Entrada.
     * Durante la ejecución de la operación 7, tiene que mostrar los mismos mensajes que si se ejecutara el comando desde la línea de comandos, en caso de error al procesar una carta mostrará el mensaje de aviso, tal y como se indicaba en los ejemplos, y continuará con la carga.
 
-7. El programa podrá ser ejecutado desde la línea de comandos con cualquiera de las 8 operaciones anteriores o sin ningún parámetro. Mostrará por consola la información necesaria según los requisitos solicitados y posteriormente abrirá una ventana gráfica, que tendrá el siguiente funcionamiento:
+8. El programa podrá ser ejecutado desde la línea de comandos con cualquiera de las 8 operaciones anteriores o sin ningún parámetro. Mostrará por consola la información necesaria según los requisitos solicitados y posteriormente abrirá una ventana gráfica, que tendrá el siguiente funcionamiento:
     
     * La ventana contendrá como mínimo un componente Column o LazyColumn, dos botones y un campo de edición de texto (TextEditor/OutlinedTextEditor).
     * Por defecto mostrará la información de todos los grupos (grupoid, grupodesc, mejorposCTFid).
