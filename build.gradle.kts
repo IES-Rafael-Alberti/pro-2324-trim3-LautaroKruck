@@ -23,13 +23,19 @@ repositories {
 }
 
 dependencies {
-    // Note, if you develop a library, you should use compose.desktop.common.
-    // compose.desktop.currentOs should be used in launcher-sourceSet
-    // (in a separate module for demo project and in testMain).
-    // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
+
     testImplementation(kotlin("test"))
+
     implementation("com.h2database:h2:2.2.224")
+
+
+    implementation ("com.zaxxer:HikariCP:5.0.0")
+
+
+    implementation("org.slf4j:slf4j-nop:2.0.6")
+
+    implementation("org.apache.commons:commons-dbcp2:2.8.0")
 
 }
 

@@ -11,28 +11,7 @@ import com.yourpackage.service.MainService
 import com.yourpackage.ui.MainUI
 import com.yourpackage.ui.MainViewModel
 import java.sql.Connection
-
-fun createTables(connection: Connection) {
-    val statement = connection.createStatement()
-    val createGrupoTable = """
-        CREATE TABLE GRUPOS (
-            grupoid INT PRIMARY KEY,
-            grupodesc VARCHAR(255) NOT NULL,
-            mejorposCTFid INT
-        );
-    """.trimIndent()
-    val createCTFTable = """
-        CREATE TABLE CTFS (
-            CTFid INT,
-            grupoid INT,
-            puntuacion INT,
-            PRIMARY KEY (CTFid, grupoid),
-            FOREIGN KEY (grupoid) REFERENCES GRUPOS(grupoid)
-        );
-    """.trimIndent()
-    statement.execute(createGrupoTable)
-    statement.execute(createCTFTable)
-}
+import java.sql.SQLException
 
 fun main(args: Array<String>) {
     val connection = DBConnection.getConnection()
@@ -60,5 +39,33 @@ fun main(args: Array<String>) {
         }
     } else {
         output.showMessage("Por favor, proporciona un comando.")
+    }
+}
+
+fun createTables(connection: Connection) {
+    val statement = connection.createStatement()
+    try {
+        val createGrupoTable = """
+            CREATE TABLE IF NOT EXISTS GRUPOS (
+                grupoid INT PRIMARY KEY,
+                grupodesc VARCHAR(255) NOT NULL,
+                mejorposCTFid INT
+            );
+        """.trimIndent()
+        val createCTFTable = """
+            CREATE TABLE IF NOT EXISTS CTFS (
+                CTFid INT,
+                grupoid INT,
+                puntuacion INT,
+                PRIMARY KEY (CTFid, grupoid),
+                FOREIGN KEY (grupoid) REFERENCES GRUPOS(grupoid)
+            );
+        """.trimIndent()
+        statement.execute(createGrupoTable)
+        statement.execute(createCTFTable)
+    } catch (e: SQLException) {
+        e.printStackTrace()
+    } finally {
+        statement.close()
     }
 }

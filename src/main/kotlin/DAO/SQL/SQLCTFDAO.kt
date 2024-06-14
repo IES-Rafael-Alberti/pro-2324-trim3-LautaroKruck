@@ -1,7 +1,7 @@
 package com.yourpackage.DAO.SQL
 
 import com.yourpackage.entity.CTFParticipation
-import com.yourpackage.dao.ICTFDAO
+import com.yourpackage.DAO.ICTFDAO
 import com.yourpackage.db_connection.DBConnection
 import com.yourpackage.entity.CTF
 import java.sql.Connection
@@ -13,28 +13,17 @@ class SQLCTFDAO : ICTFDAO {
 
     override fun agregarCTF(ctf: CTF) {
         val consulta = "INSERT INTO CTFS (CTFid, grupoId, puntuacion) VALUES (?, ?, ?)"
-        val preparedStatement: PreparedStatement = conexion.prepareStatement(consulta)
-        preparedStatement.setInt(1, ctf.CTFid)
-        preparedStatement.setInt(2, ctf.grupoId)
-        preparedStatement.setInt(3, ctf.puntuacion)
-        preparedStatement.executeUpdate()
+        executeUpdate(consulta, ctf.CTFid, ctf.grupoId, ctf.puntuacion)
     }
 
     override fun actualizarCTF(ctf: CTF) {
         val consulta = "UPDATE CTFS SET puntuacion = ? WHERE CTFid = ? AND grupoId = ?"
-        val preparedStatement: PreparedStatement = conexion.prepareStatement(consulta)
-        preparedStatement.setInt(1, ctf.puntuacion)
-        preparedStatement.setInt(2, ctf.CTFid)
-        preparedStatement.setInt(3, ctf.grupoId)
-        preparedStatement.executeUpdate()
+        executeUpdate(consulta, ctf.puntuacion, ctf.CTFid, ctf.grupoId)
     }
 
     override fun eliminarCTF(ctfId: Int, grupoId: Int) {
         val consulta = "DELETE FROM CTFS WHERE CTFid = ? AND grupoId = ?"
-        val preparedStatement: PreparedStatement = conexion.prepareStatement(consulta)
-        preparedStatement.setInt(1, ctfId)
-        preparedStatement.setInt(2, grupoId)
-        preparedStatement.executeUpdate()
+        executeUpdate(consulta, ctfId, grupoId)
     }
 
     override fun obtenerTodosCTFs(): List<CTF> {
@@ -42,13 +31,15 @@ class SQLCTFDAO : ICTFDAO {
         val statement = conexion.createStatement()
         val resultSet: ResultSet = statement.executeQuery(consulta)
         val listaCTFs = mutableListOf<CTF>()
-        while (resultSet.next()) {
-            val ctf = CTF(
-                resultSet.getInt("CTFid"),
-                resultSet.getInt("grupoId"),
-                resultSet.getInt("puntuacion")
-            )
-            listaCTFs.add(ctf)
+        resultSet.use {
+            while (it.next()) {
+                val ctf = CTF(
+                    it.getInt("CTFid"),
+                    it.getInt("grupoId"),
+                    it.getInt("puntuacion")
+                )
+                listaCTFs.add(ctf)
+            }
         }
         return listaCTFs
     }
@@ -56,17 +47,21 @@ class SQLCTFDAO : ICTFDAO {
     override fun obtenerCTFPorId(ctfId: Int, grupoId: Int): CTF? {
         val consulta = "SELECT * FROM CTFS WHERE CTFid = ? AND grupoId = ?"
         val preparedStatement: PreparedStatement = conexion.prepareStatement(consulta)
-        preparedStatement.setInt(1, ctfId)
-        preparedStatement.setInt(2, grupoId)
-        val resultSet: ResultSet = preparedStatement.executeQuery()
-        return if (resultSet.next()) {
-            CTF(
-                resultSet.getInt("CTFid"),
-                resultSet.getInt("grupoId"),
-                resultSet.getInt("puntuacion")
-            )
-        } else {
-            null
+        preparedStatement.use {
+            it.setInt(1, ctfId)
+            it.setInt(2, grupoId)
+            val resultSet: ResultSet = it.executeQuery()
+            resultSet.use {
+                return if (it.next()) {
+                    CTF(
+                        it.getInt("CTFid"),
+                        it.getInt("grupoId"),
+                        it.getInt("puntuacion")
+                    )
+                } else {
+                    null
+                }
+            }
         }
     }
 
@@ -74,13 +69,27 @@ class SQLCTFDAO : ICTFDAO {
         val participaciones = mutableListOf<CTFParticipation>()
         val consulta = "SELECT * FROM CTFS WHERE CTFid = ?"
         val preparedStatement = conexion.prepareStatement(consulta)
-        preparedStatement.setInt(1, ctfId)
-        val resultSet = preparedStatement.executeQuery()
-        while (resultSet.next()) {
-            val grupoId = resultSet.getInt("grupoId")
-            val puntuacion = resultSet.getInt("puntuacion")
-            participaciones.add(CTFParticipation(ctfId, grupoId, puntuacion))
+        preparedStatement.use {
+            it.setInt(1, ctfId)
+            val resultSet = it.executeQuery()
+            resultSet.use {
+                while (it.next()) {
+                    val grupoId = it.getInt("grupoId")
+                    val puntuacion = it.getInt("puntuacion")
+                    participaciones.add(CTFParticipation(ctfId, grupoId, puntuacion))
+                }
+            }
         }
         return participaciones
+    }
+
+    private fun executeUpdate(consulta: String, vararg params: Any) {
+        val preparedStatement: PreparedStatement = conexion.prepareStatement(consulta)
+        preparedStatement.use {
+            for ((index, param) in params.withIndex()) {
+                it.setObject(index + 1, param)
+            }
+            it.executeUpdate()
+        }
     }
 }

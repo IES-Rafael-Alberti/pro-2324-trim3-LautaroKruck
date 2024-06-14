@@ -1,7 +1,7 @@
 package com.yourpackage.DAO.JSON
 
 import com.yourpackage.entity.CTFParticipation
-import com.yourpackage.dao.ICTFDAO
+import com.yourpackage.DAO.ICTFDAO
 import com.yourpackage.entity.CTF
 
 class JSONCTFDAO : ICTFDAO {

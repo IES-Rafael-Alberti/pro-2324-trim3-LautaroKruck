@@ -1,4 +1,4 @@
-package com.yourpackage.dao
+package com.yourpackage.DAO
 
 import com.yourpackage.entity.CTFParticipation
 import com.yourpackage.entity.CTF

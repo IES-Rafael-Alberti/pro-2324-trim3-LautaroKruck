@@ -1,7 +1,7 @@
 package com.yourpackage.DAO.XML
 
 import com.yourpackage.entity.CTFParticipation
-import com.yourpackage.dao.ICTFDAO
+import com.yourpackage.DAO.ICTFDAO
 import com.yourpackage.entity.CTF
 
 class XMLCTFDAO : ICTFDAO {

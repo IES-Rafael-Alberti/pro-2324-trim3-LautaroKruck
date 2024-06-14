@@ -1,4 +1,4 @@
-package com.yourpackage.dao
+package com.yourpackage.DAO
 
 import com.yourpackage.entity.Grupo
 
@@ -10,6 +10,7 @@ interface IGrupoDAO {
     fun obtenerTodosGrupos(): List<Grupo>
     fun obtenerGrupoPorId(grupoId: Int): Grupo?
     fun obtenerDescripcionGrupoPorId(grupoId: Int): String?
+    fun obtenerUltimoGrupoId(): Int?
 }
 
 

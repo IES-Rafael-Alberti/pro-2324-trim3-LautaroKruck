@@ -1,7 +1,7 @@
 package com.yourpackage.DAO.JSON
 
 import com.yourpackage.entity.Grupo
-import com.yourpackage.dao.IGrupoDAO
+import com.yourpackage.DAO.IGrupoDAO
 
 class JSONGrupoDAO : IGrupoDAO {
     override fun agregarGrupo(grupo: Grupo) {
@@ -25,6 +25,10 @@ class JSONGrupoDAO : IGrupoDAO {
     }
 
     override fun obtenerDescripcionGrupoPorId(grupoId: Int): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun obtenerUltimoGrupoId(): Int? {
         TODO("Not yet implemented")
     }
 }

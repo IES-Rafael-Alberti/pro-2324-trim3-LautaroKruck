@@ -5,12 +5,14 @@ import com.yourpackage.output.IOutputInfo
 import com.yourpackage.service.CTFService
 import com.yourpackage.service.GrupoService
 import java.io.File
+import java.io.IOException
 
 class MainService(
     private val grupoService: GrupoService,
     private val ctfService: CTFService,
     private val output: IOutputInfo
 ) {
+
     fun processCommand(command: String, args: List<String>) {
         try {
             when (command) {
@@ -30,134 +32,123 @@ class MainService(
     }
 
     private fun añadirGrupo(args: List<String>) {
+        if (args.size != 1) {
+            output.showMessage("ERROR: El número de parámetros no es adecuado.")
+            return
+        }
+
+        val grupoDesc = args[0]
+
         try {
-            if (args.size == 2) {
-                val grupoId = args[0].toIntOrNull()
-                if (grupoId != null) {
-                    val grupoDesc = args[1]
-                    if (!grupoService.existsGrupo(grupoId)) {
-                        grupoService.addGrupo(grupoId, grupoDesc)
-                        output.showMessage("Grupo agregado exitosamente.")
-                    } else {
-                        output.showMessage("ERROR: El grupo con ID $grupoId ya existe.")
-                    }
-                } else {
-                    output.showMessage("ERROR: El parámetro <grupoid> debe ser un valor numérico de tipo entero.")
-                }
+            val ultimoGrupoId = grupoService.obtenerUltimoGrupoId() ?: 0
+            val nuevoGrupoId = ultimoGrupoId + 1
+
+            if (!grupoService.existsGrupo(nuevoGrupoId)) {
+                grupoService.addGrupo(nuevoGrupoId, grupoDesc)
+                output.showMessage("Procesado: Añadido el grupo \"$grupoDesc\" con ID $nuevoGrupoId.")
             } else {
-                output.showMessage("ERROR: El número de parámetros no es adecuado.")
+                output.showMessage("ERROR: El grupo con ID $nuevoGrupoId ya existe.")
             }
         } catch (e: Exception) {
-            output.showMessage("ERROR: Se ha producido un error al agregar el grupo. ${e.message}")
+            output.showMessage("ERROR: Se ha producido un error al añadir el grupo. ${e.message}")
         }
     }
 
     private fun eliminarGrupo(args: List<String>) {
-        try {
-            if (args.size == 1) {
-                val grupoId = args[0].toIntOrNull()
-                if (grupoId != null) {
-                    if (grupoService.existsGrupo(grupoId)) {
-                        grupoService.deleteGrupo(grupoId)
-                        output.showMessage("Grupo eliminado exitosamente.")
-                    } else {
-                        output.showMessage("ERROR: El grupo con ID $grupoId no existe.")
-                    }
-                } else {
-                    output.showMessage("ERROR: El parámetro <grupoid> debe ser un valor numérico de tipo entero.")
-                }
-            } else {
-                output.showMessage("ERROR: El número de parámetros no es adecuado.")
-            }
-        } catch (e: Exception) {
-            output.showMessage("ERROR: Se ha producido un error al eliminar el grupo. ${e.message}")
+        if (args.size != 1) {
+            output.showMessage("ERROR: El número de parámetros no es adecuado.")
+            return
+        }
+
+        val grupoId = args[0].toIntOrNull()
+        if (grupoId == null) {
+            output.showMessage("ERROR: El parámetro <grupoid> debe ser un valor numérico de tipo entero.")
+            return
+        }
+
+        if (grupoService.existsGrupo(grupoId)) {
+            grupoService.deleteGrupo(grupoId)
+        } else {
+            output.showMessage("ERROR: El grupo con ID $grupoId no existe.")
         }
     }
 
     private fun buscarGrupo(args: List<String>) {
-        try {
-            val grupoId = args.firstOrNull()?.toIntOrNull()
-            grupoService.listGrupo(grupoId)
-        } catch (e: Exception) {
-            output.showMessage("ERROR: Se ha producido un error al buscar el grupo. ${e.message}")
-        }
+        val grupoId = args.firstOrNull()?.toIntOrNull()
+        grupoService.listGrupo(grupoId)
     }
 
     private fun añadirCTFPart(args: List<String>) {
-        try {
-            if (args.size == 3) {
-                val ctfId = args[0].toIntOrNull()
-                val grupoId = args[1].toIntOrNull()
-                val puntuacion = args[2].toIntOrNull()
-                if (ctfId != null && grupoId != null && puntuacion != null) {
-                    if (grupoService.existsGrupo(grupoId) && ctfService.existsCTF(ctfId)) {
-                        ctfService.addCTFParticipation(ctfId, grupoId, puntuacion)
-                        output.showMessage("Participación en CTF agregada exitosamente.")
-                    } else {
-                        output.showMessage("ERROR: El grupo o CTF especificado no existe.")
-                    }
-                } else {
-                    output.showMessage("ERROR: Los parámetros deben ser valores numéricos de tipo entero.")
-                }
-            } else {
-                output.showMessage("ERROR: El número de parámetros no es adecuado.")
+        if (args.size != 3) {
+            output.showMessage("ERROR: El número de parámetros no es adecuado.")
+            return
+        }
+
+        val ctfId = args[0].toIntOrNull()
+        val grupoId = args[1].toIntOrNull()
+        val puntuacion = args[2].toIntOrNull()
+
+        if (ctfId == null || grupoId == null || puntuacion == null) {
+            output.showMessage("ERROR: Los parámetros deben ser valores numéricos de tipo entero.")
+            return
+        }
+
+        if (grupoService.existsGrupo(grupoId)) {
+            if (ctfService.existsCTFParticipation(ctfId, grupoId)) {
+                ctfService.updateCTFParticipation(ctfId, grupoId, puntuacion)
             }
-        } catch (e: Exception) {
-            output.showMessage("ERROR: Se ha producido un error al añadir la participación en el CTF. ${e.message}")
+            else {
+                ctfService.addCTFParticipation(ctfId, grupoId, puntuacion)
+
+            }
+        } else {
+            output.showMessage("ERROR: El grupo o CTF especificado no existe.")
         }
     }
 
     private fun eliminarCTFPart(args: List<String>) {
-        try {
-            if (args.size == 2) {
-                val ctfId = args[0].toIntOrNull()
-                val grupoId = args[1].toIntOrNull()
-                if (ctfId != null && grupoId != null) {
-                    if (ctfService.existsCTFParticipation(ctfId, grupoId)) {
-                        ctfService.deleteCTFParticipation(ctfId, grupoId)
-                        output.showMessage("Participación en CTF eliminada exitosamente.")
-                    } else {
-                        output.showMessage("ERROR: La participación en el CTF especificada no existe.")
-                    }
-                } else {
-                    output.showMessage("ERROR: Los parámetros deben ser valores numéricos de tipo entero.")
-                }
-            } else {
-                output.showMessage("ERROR: El número de parámetros no es adecuado.")
-            }
-        } catch (e: Exception) {
-            output.showMessage("ERROR: Se ha producido un error al eliminar la participación en el CTF. ${e.message}")
+        if (args.size != 2) {
+            output.showMessage("ERROR: El número de parámetros no es adecuado.")
+            return
+        }
+
+        val ctfId = args[0].toIntOrNull()
+        val grupoId = args[1].toIntOrNull()
+
+        if (ctfId == null || grupoId == null) {
+            output.showMessage("ERROR: Los parámetros deben ser valores numéricos de tipo entero.")
+            return
+        }
+
+        if (ctfService.existsCTFParticipation(ctfId, grupoId)) {
+            ctfService.deleteCTFParticipation(ctfId, grupoId)
+        } else {
+            output.showMessage("ERROR: La participación en el CTF especificada no existe.")
         }
     }
 
     private fun listaCTFPart(args: List<String>) {
-        try {
-            if (args.size == 1) {
-                val ctfId = args[0].toIntOrNull()
-                if (ctfId != null) {
-                    ctfService.listParticipaciones(ctfId)
-                } else {
-                    output.showMessage("ERROR: El parámetro <ctfId> debe ser un valor numérico de tipo entero.")
-                }
-            } else {
-                output.showMessage("ERROR: El número de parámetros no es adecuado.")
-            }
-        } catch (e: Exception) {
-            output.showMessage("ERROR: Se ha producido un error al listar las participaciones en el CTF. ${e.message}")
+        if (args.size != 1) {
+            output.showMessage("ERROR: El número de parámetros no es adecuado.")
+            return
+        }
+
+        val ctfId = args[0].toIntOrNull()
+        if (ctfId != null) {
+            ctfService.listParticipaciones(ctfId)
+        } else {
+            output.showMessage("ERROR: El parámetro <ctfId> debe ser un valor numérico de tipo entero.")
         }
     }
 
     private fun comandosFile(args: List<String>) {
-        try {
-            if (args.size == 1) {
-                val filePath = args[0]
-                executeCommandsFromFile(filePath)
-            } else {
-                output.showMessage("ERROR: El número de parámetros no es adecuado.")
-            }
-        } catch (e: Exception) {
-            output.showMessage("ERROR: Se ha producido un error al procesar el archivo de comandos. ${e.message}")
+        if (args.size != 1) {
+            output.showMessage("ERROR: El número de parámetros no es adecuado.")
+            return
         }
+
+        val filePath = args[0]
+        executeCommandsFromFile(filePath)
     }
 
     private fun Interfaz() {
@@ -165,19 +156,45 @@ class MainService(
     }
 
     private fun executeCommandsFromFile(filePath: String) {
+        val file = File(filePath)
+        if (!file.exists() || !file.isFile) {
+            output.showMessage("ERROR: El archivo no existe o no es un archivo válido.")
+            return
+        }
+
         try {
-            val file = File(filePath)
-            if (file.exists() && file.isFile) {
-                file.forEachLine { line ->
-                    val parts = line.split(" ")
-                    val command = parts[0]
-                    val args = parts.drop(1)
-                    processCommand(command, args)
+            var currentCommand: String? = null
+            val args = mutableListOf<String>()
+
+            file.forEachLine { line ->
+                val trimmedLine = line.trim()
+
+                // Ignorar comentarios y líneas vacías
+                if (trimmedLine.startsWith("#") || trimmedLine.isEmpty()) {
+                    return@forEachLine
                 }
-            } else {
-                output.showMessage("ERROR: El archivo no existe o no es un archivo válido.")
+
+                // Si la línea es un comando (empieza con "-")
+                if (trimmedLine.startsWith("-")) {
+                    // Ejecutar el comando previo, si existe
+                    currentCommand?.let {
+                        processCommand(it, args.toList())
+                    }
+
+                    // Actualizar el comando actual y limpiar los argumentos
+                    currentCommand = trimmedLine
+                    args.clear()
+                } else {
+                    // Agregar la línea como argumento del comando actual
+                    args.add(trimmedLine)
+                }
             }
-        } catch (e: Exception) {
+
+            // Ejecutar el último comando
+            currentCommand?.let {
+                processCommand(it, args.toList())
+            }
+        } catch (e: IOException) {
             output.showMessage("ERROR: Se ha producido un error al leer el archivo. ${e.message}")
         }
     }

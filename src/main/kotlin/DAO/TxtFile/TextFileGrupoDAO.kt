@@ -1,7 +1,8 @@
 package com.yourpackage.DAO.TxtFile
 
 import com.yourpackage.entity.Grupo
-import com.yourpackage.dao.IGrupoDAO
+import com.yourpackage.DAO.IGrupoDAO
+
 
 class TextFileGrupoDAO : IGrupoDAO {
     override fun agregarGrupo(grupo: Grupo) {
@@ -25,6 +26,10 @@ class TextFileGrupoDAO : IGrupoDAO {
     }
 
     override fun obtenerDescripcionGrupoPorId(grupoId: Int): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun obtenerUltimoGrupoId(): Int? {
         TODO("Not yet implemented")
     }
 }

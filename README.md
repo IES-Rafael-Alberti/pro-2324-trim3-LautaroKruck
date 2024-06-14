@@ -11,7 +11,7 @@ El equipo de ciberseguridad del IESRA quiere llevar un histórico de la puntuaci
 
 Para ello han diseñado una base de datos muy simple en la que tiene dos entidades:
 - entidad `GRUPOS`: Que almacenará cada uno de los grupos participantes junto con el id del CTF en el que han obtenido la mayor puntuación.
-    - `grupoid`: Identificador del grupo.
+    - `grupoid`: Identificador del grupo que será un autoincremental.
     - `grupodesc`: Descripción del grupo.
     - `mejorposCTFid`: Id del CTF en el que ha logrado la _mejor posición_.
 - entidad `CTFS`: Que almacenará la información sobre la participación de cada `GRUPO` en un `CTFS`.
@@ -23,7 +23,7 @@ El programa tendrá que soportar las siguientes operaciones, que se pasarán a t
 
 | id | **comando**                       	   | **Descripción**                                                                    	                                                                                                                                                                                                                         |
 |----|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1  | `-g <grupoId> <grupoDesc>` 	          | Añade un nuevo grupo con `<grupoid>` y `<grupodesc>` en la tabla `GRUPOS`.                                                                                                                                                                                                                                   |
+| 1  | `-g <grupoId> <grupoDesc>` 	          | Añade un nuevo grupo con `<grupodesc>` en la tabla `GRUPOS`.                                                                                                                                                                                                                                   |
 | 2  | `-p <ctfId> <grupoId> <puntuacion>` 	 | Añade una participación del grupo `<grupoid>` en el CTF `<ctfid>` con la puntuación `<puntuacion>`. Si la participación del grupo `<grupoid>` en el CTF `<ctfid>` ya existe, actualiza la puntualización. En cualquiera de los casos, recalcula el campo `mejorposCTFid` de los grupos en la tabla `GRUPOS`. |
 | 3  | `-t <grupoId>` 	                      | Elimina el grupo `<grupoid>` en la tabla `GRUPOS`, por tanto también elimina todas sus participaciones en los CTF.                                                                                                                                                                                           |
 | 4  | `-e <ctfId> <grupoId>`              	 | Elimina la participación del grupo `<grupoid>` en el CTF `<ctfid>`. Si no existe la participación, no realiza nada. Finalmente, recalcula el campo `mejorposCTFid` de los grupos en la tabla `GRUPOS`.                                                                                                       |
@@ -39,9 +39,9 @@ Ejemplo de formato del fichero indicado en la opción 7:
 # Comentario de la línea. Las opciones son: -g, -p, -t, -e, -l, -c, y pueden o no estar en fichero. 
 # Crea grupos, podrá tener tantas líneas como quiera
 -g
-1;1DAM-G1
-1;1DAM-G2
-1;1DAM-G3
+1DAM-G1
+1DAM-G2
+1DAM-G3
 
 # Añade/Actualiza participaciones, podrá tener tantas líneas como quiera
 -p
@@ -76,15 +76,11 @@ Ejemplo de formato del fichero indicado en la opción 7:
   $ ERROR: El número de parámetros no es adecuado.
   ```
 
-  ```
-  $ un9pe -g 1DAM-G1 1
-  $ ERROR: El parámetro <grupoid> debe ser un valor numérico de tipo entero.
-  ```
   
 - Mensaje de confirmación de realización correcta de las operaciones 1, 2 o 3. 
 
   ```
-  $ un9pe -g 1 1DAM-G1
+  $ un9pe -g 1DAM-G1
   $ Procesado: Añadido el grupo "1DAM-G1".
   ```
 
@@ -238,10 +234,25 @@ Para probar el programa se realizará distintas llamadas al programa, comparando
 
 En tarea.
 
+### 4.1. Tips de ayuda
+• Piensa bien el proceso de actualización del cambo mejorCTFid en la tabla GRUPOS, ya que es un campo que hay que calcular. Ten en cuenta que se calcula en función de la posición y no de puntuación. Un grupo que haya obtenido menor puntuación en un CTF, puede haber quedado mejor situado que en otro CTF en el que haya obtenido más puntuación.
+• Sois libres de realizar el código a vuestro gusto, siempre y cuando cumpláis los REQUISITOS que se piden.
+• Hacer uso de estructuras de datos como Map, List, Set, etc... para almacenar la información. Estas estructuras de datos os facilitarán la manipulación de los datos y facilita la comunicación entre las distintas capas de la aplicación, y entre las distintas clases.
+• Cuidado con las entradas lectura desde teclado/salidas a consola... ya sabemos delegar este trabajo a un servicio que se encargue de estas funciones. Por tanto, no se permiten System.out.println() ni Scanner distribuidos por el código.
+• No debe de haber funciones TOP-LEVEL (funciones que no pertenecen a ninguna clase), ya sabéis programación orientada a objetos, por tanto todo tiene que estar encapsulado en clases y métodos.
+• Es necesario utilizar el patrón DAO para desarrollar la parte de almacenamiento.
+• Usar Abstract Factory para permitir que se puedan implementar otras fuentes de datos (JSON, Text Files, XML) sin ser un requisito tener que implementarlas (dejarlas con TODO()). Solo se implementará la fuente de datos SQL
+• Os aconsejo que primero organicéis el código a nivel de patrón DAO para el CRUD de las tablas.
+• Documentación, organización en paquetes y limpieza de código.
+• Acordaros de programar en pequeñito... evitar las funciones kilométricas, son poco legibles y difíciles de mantener y escalar.
+• Cuando existan varios bloques de código seguidos, refactorizar y crear métodos privados que resuman que se hace. De esta forma, reduciréis el tamaño de la función y, poniendo nombres adecuados a los métodos, se entenderá el código sin necesidad de comentarios. • A nivel de interfaz gráfica no os compliquéis con temas tipo foco, mensajes pop-up, tooltip, etc... sino que vayáis a resolver lo que se pide de manera sencilla.
+• No es necesario que la interfaz gráfica sea muy bonita, pero sí funcional.
+
+
 ## 5. Condiciones de entrega
 
 Repositorio y ejecutable.
 
-## 4. Bibliografía
+## 6. Bibliografía
 
 Más documentación en la tarea.
