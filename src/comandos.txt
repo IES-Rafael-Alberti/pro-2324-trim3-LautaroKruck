@@ -1,8 +1,15 @@
--g GrupoA
--g GrupoB
--g GrupoC
--t 2
--l 3
--p 1 2 100
--e 1 2
--c 1
+-g
+Nuevo Grupo
+-t
+1
+-l
+1
+-p
+1
+1
+100
+-e
+1
+1
+-c
+1

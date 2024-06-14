@@ -31,6 +31,7 @@ class MainService(
         }
     }
 
+
     private fun añadirGrupo(args: List<String>) {
         if (args.size != 1) {
             output.showMessage("ERROR: El número de parámetros no es adecuado.")
@@ -96,8 +97,7 @@ class MainService(
         if (grupoService.existsGrupo(grupoId)) {
             if (ctfService.existsCTFParticipation(ctfId, grupoId)) {
                 ctfService.updateCTFParticipation(ctfId, grupoId, puntuacion)
-            }
-            else {
+            } else {
                 ctfService.addCTFParticipation(ctfId, grupoId, puntuacion)
 
             }
@@ -155,7 +155,7 @@ class MainService(
         // Lanzar la interfaz gráfica
     }
 
-    private fun executeCommandsFromFile(filePath: String) {
+    fun executeCommandsFromFile(filePath: String) {
         val file = File(filePath)
         if (!file.exists() || !file.isFile) {
             output.showMessage("ERROR: El archivo no existe o no es un archivo válido.")
