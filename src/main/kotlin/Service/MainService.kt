@@ -7,31 +7,33 @@ import com.yourpackage.service.GrupoService
 import java.io.File
 import java.io.IOException
 
+// Clase de servicio principal para procesar comandos
 class MainService(
     val grupoService: GrupoService,
     private val ctfService: CTFService,
     val output: IOutputInfo
 ) {
 
+    // Método para procesar comandos
     fun processCommand(command: String, args: List<String>) {
         try {
             when (command) {
-                "-g" -> añadirGrupo(args)
-                "-t" -> eliminarGrupo(args)
-                "-l" -> buscarGrupo(args)
-                "-p" -> añadirCTFPart(args)
-                "-e" -> eliminarCTFPart(args)
-                "-c" -> listaCTFPart(args)
-                "-f" -> comandosFile(args)
-                "-i" -> Interfaz()
-                else -> output.showMessage("Comando no reconocido: $command")
+                "-g" -> añadirGrupo(args) // Añadir grupo
+                "-t" -> eliminarGrupo(args) // Eliminar grupo
+                "-l" -> buscarGrupo(args) // Listar grupo
+                "-p" -> añadirCTFPart(args) // Añadir participación en CTF
+                "-e" -> eliminarCTFPart(args) // Eliminar participación en CTF
+                "-c" -> listaCTFPart(args) // Listar participaciones en CTF
+                "-f" -> comandosFile(args) // Procesar comandos desde un archivo
+                "-i" -> Interfaz() // Iniciar interfaz gráfica
+                else -> output.showMessage("Comando no reconocido: $command") // Comando no reconocido
             }
         } catch (e: Exception) {
             output.showMessage("ERROR: Se ha producido un error al procesar el comando. ${e.message}")
         }
     }
 
-
+    // Método privado para añadir un grupo
     private fun añadirGrupo(args: List<String>) {
         if (args.size != 1) {
             output.showMessage("ERROR: El número de parámetros no es adecuado.")
@@ -55,6 +57,7 @@ class MainService(
         }
     }
 
+    // Método privado para eliminar un grupo
     private fun eliminarGrupo(args: List<String>) {
         if (args.size != 1) {
             output.showMessage("ERROR: El número de parámetros no es adecuado.")
@@ -74,11 +77,13 @@ class MainService(
         }
     }
 
+    // Método privado para buscar un grupo
     private fun buscarGrupo(args: List<String>) {
         val grupoId = args.firstOrNull()?.toIntOrNull()
         grupoService.listGrupo(grupoId)
     }
 
+    // Método privado para añadir una participación en CTF
     private fun añadirCTFPart(args: List<String>) {
         if (args.size != 3) {
             output.showMessage("ERROR: El número de parámetros no es adecuado.")
@@ -99,13 +104,13 @@ class MainService(
                 ctfService.updateCTFParticipation(ctfId, grupoId, puntuacion)
             } else {
                 ctfService.addCTFParticipation(ctfId, grupoId, puntuacion)
-
             }
         } else {
             output.showMessage("ERROR: El grupo o CTF especificado no existe.")
         }
     }
 
+    // Método privado para eliminar una participación en CTF
     private fun eliminarCTFPart(args: List<String>) {
         if (args.size != 2) {
             output.showMessage("ERROR: El número de parámetros no es adecuado.")
@@ -127,6 +132,7 @@ class MainService(
         }
     }
 
+    // Método privado para listar participaciones en CTF
     private fun listaCTFPart(args: List<String>) {
         if (args.size != 1) {
             output.showMessage("ERROR: El número de parámetros no es adecuado.")
@@ -141,6 +147,7 @@ class MainService(
         }
     }
 
+    // Método privado para procesar comandos desde un archivo
     private fun comandosFile(args: List<String>) {
         if (args.size != 1) {
             output.showMessage("ERROR: El número de parámetros no es adecuado.")
@@ -151,10 +158,12 @@ class MainService(
         executeCommandsFromFile(filePath)
     }
 
+    // Método privado para iniciar la interfaz gráfica
     private fun Interfaz() {
         // Lanzar la interfaz gráfica
     }
 
+    // Método para ejecutar comandos desde un archivo
     fun executeCommandsFromFile(filePath: String) {
         val file = File(filePath)
         if (!file.exists() || !file.isFile) {

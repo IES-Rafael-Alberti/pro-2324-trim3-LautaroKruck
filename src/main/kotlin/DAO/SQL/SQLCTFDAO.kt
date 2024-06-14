@@ -9,23 +9,28 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 class SQLCTFDAO : ICTFDAO {
+    // Obtiene la conexión a la base de datos
     private val conexion: Connection = DBConnection.getConnection()
 
+    // Inserta un nuevo registro de CTF en la base de datos
     override fun agregarCTF(ctf: CTF) {
         val consulta = "INSERT INTO CTFS (CTFid, grupoId, puntuacion) VALUES (?, ?, ?)"
         executeUpdate(consulta, ctf.CTFid, ctf.grupoId, ctf.puntuacion)
     }
 
+    // Actualiza un registro existente de CTF en la base de datos
     override fun actualizarCTF(ctf: CTF) {
         val consulta = "UPDATE CTFS SET puntuacion = ? WHERE CTFid = ? AND grupoId = ?"
         executeUpdate(consulta, ctf.puntuacion, ctf.CTFid, ctf.grupoId)
     }
 
+    // Elimina un registro de CTF de la base de datos basado en su ID y grupo ID
     override fun eliminarCTF(ctfId: Int, grupoId: Int) {
         val consulta = "DELETE FROM CTFS WHERE CTFid = ? AND grupoId = ?"
         executeUpdate(consulta, ctfId, grupoId)
     }
 
+    // Recupera todos los registros de CTF de la base de datos
     override fun obtenerTodosCTFs(): List<CTF> {
         val consulta = "SELECT * FROM CTFS"
         val statement = conexion.createStatement()
@@ -44,6 +49,7 @@ class SQLCTFDAO : ICTFDAO {
         return listaCTFs
     }
 
+    // Recupera un registro específico de CTF de la base de datos basado en su ID y grupo ID
     override fun obtenerCTFPorId(ctfId: Int, grupoId: Int): CTF? {
         val consulta = "SELECT * FROM CTFS WHERE CTFid = ? AND grupoId = ?"
         val preparedStatement: PreparedStatement = conexion.prepareStatement(consulta)
@@ -65,6 +71,7 @@ class SQLCTFDAO : ICTFDAO {
         }
     }
 
+    // Recupera todas las participaciones de un CTF específico de la base de datos
     override fun obtenerParticipacionesPorCTFId(ctfId: Int): List<CTFParticipation> {
         val participaciones = mutableListOf<CTFParticipation>()
         val consulta = "SELECT * FROM CTFS WHERE CTFid = ?"
@@ -83,6 +90,7 @@ class SQLCTFDAO : ICTFDAO {
         return participaciones
     }
 
+    // Método privado para ejecutar actualizaciones en la base de datos
     private fun executeUpdate(consulta: String, vararg params: Any) {
         val preparedStatement: PreparedStatement = conexion.prepareStatement(consulta)
         preparedStatement.use {
